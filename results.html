@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Results</h1>
+    <h2 id="title"></h2>
+    <div>
+      <label id="label1"></label>
+      <progress id="option1"></progress>
+      <label id="label2"></label>
+      <progress id="option2"></progress>
+      <label id="label3"></label>
+      <progress id="option3"></progress>
+      <label id="label4"></label>
+      <progress id="option4"></progress>
+    </div>
+  </body>
+  <script>
+    async function getPoll() {
+      const response = await fetch("http://localhost:4000/polls/1");
+      const data = await response.json();
+      console.log("DATA:", data);
+
+      const titleElement = document.getElementById("title");
+      titleElement.innerText = data.title;
+
+      for (let index = 1; index <= 4; index++) {
+        const label = document.getElementById(`label${index}`);
+        label.innerText = data.options[index].text;
+        const meter = document.getElementById(`option${index}`);
+        meter.value = data.options[index].votes;
+        meter.max = data.voteCount;
+      }
+    }
+
+    getPoll();
+  </script>
+</html>

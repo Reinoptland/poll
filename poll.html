@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1 id="title">Poll title here</h1>
+    <div>
+      <button id="option1">Option 1</button>
+      <button id="option2">Option 2</button>
+      <button id="option3">Option 3</button>
+      <button id="option4">Option 4</button>
+    </div>
+  </body>
+  <script>
+    async function getPoll() {
+      const response = await fetch("http://localhost:4000/polls/1");
+      const data = await response.json();
+      console.log("DATA:", data);
+
+      const titleElement = document.getElementById("title");
+      titleElement.innerText = data.title;
+
+      for (let index = 1; index <= 4; index++) {
+        const button = document.getElementById(`option${index}`);
+        button.innerText = data.options[index].text;
+        button.onclick = () => vote(index);
+      }
+    }
+
+    async function vote(optionNumber) {
+      console.log("VOTE:", optionNumber);
+      await fetch("http://localhost:4000/polls/1/vote", {
+        method: "POST",
+        body: JSON.stringify({ option: optionNumber }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      window.location = "/results.html";
+    }
+
+    getPoll();
+  </script>
+</html>
